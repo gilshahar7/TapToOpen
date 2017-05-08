@@ -19,9 +19,21 @@
 @end
 
 %hook NCNotificationListCell
-CGFloat myThreshold = 0;
--(CGFloat)_defaultActionExecuteThreshold{return myThreshold;}
--(CGFloat)_defaultActionTriggerThreshold{return myThreshold;}
+bool changeThreshold = false;
+-(CGFloat)_defaultActionExecuteThreshold{
+	if(changeThreshold == false){
+		return %orig;
+	}else{
+		return -1;
+	}
+}
+-(CGFloat)_defaultActionTriggerThreshold{
+	if(changeThreshold){
+		return %orig;
+	}else{
+		return -1;
+	}
+}
 -(CGFloat)_defaultActionOvershootContentOffset{return 0;}
 -(void)layoutSubviews{
 	%orig;
@@ -40,11 +52,11 @@ CGFloat myThreshold = 0;
 	bool isLocked = [[%c(SBLockScreenManager) sharedInstance] isUILocked];
 	if((isLocked == true) && ([self isActionButtonsFullyRevealed] == false) && ([[self contentViewController] _presentedLongLookViewController] == nil))
 	{		
-		myThreshold = -1;
+		changeThreshold = true;
 		[self setSupportsSwipeToDefaultAction:true];
 		[self _executeDefaultActionIfCompleted];
 		[self setSupportsSwipeToDefaultAction:false];
-		myThreshold = 0;
+		changeThreshold = false;
 	}
 }
 %end
