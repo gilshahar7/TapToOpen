@@ -27,14 +27,9 @@ bool changeThreshold = false;
 		return -1;
 	}
 }
--(CGFloat)_defaultActionTriggerThreshold{
-	if(changeThreshold){
-		return %orig;
-	}else{
-		return -1;
-	}
-}
+
 -(CGFloat)_defaultActionOvershootContentOffset{return 0;}
+
 -(void)layoutSubviews{
 	%orig;
 	bool isLocked = [[%c(SBLockScreenManager) sharedInstance] isUILocked];
